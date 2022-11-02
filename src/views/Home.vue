@@ -2,7 +2,7 @@
   <div class="home">
     <!-- <header class="app-header"></header> -->
     <div v-if="user">
-    <Profile user="user" />
+    <Memo user="user" />
     </div>
   </div>
 </template>
@@ -24,12 +24,12 @@ export default {
     Auth.currentAuthenticatedUser()
       .then((userData) => {
         console.log("home userdata:", userData);
-        if (userData.preferredMFA === "NOMFA") {
-          this.$router.push("/totpsetup/");
-        }
-        else {
+        // if (userData.preferredMFA === "NOMFA") {
+          // this.$router.push("/totpsetup/");
+        // }
+        // else {
           this.user = userData;
-        }
+        // }
       })
       .catch(() => {
         message
