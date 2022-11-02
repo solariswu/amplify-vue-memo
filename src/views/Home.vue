@@ -8,7 +8,7 @@
 </template>
 <script>
 // @ is an alias to /src
-import Profile from "@/components/Profile.vue";
+import Memo from "@/components/Memo.vue";
 import { Auth } from "@aws-amplify/auth";
 import { message } from "ant-design-vue";
 
@@ -18,7 +18,7 @@ export default {
     return { user: null };
   },
   components: {
-    Profile,
+    Memo,
   },
   beforeMount: function() {
     Auth.currentAuthenticatedUser()
