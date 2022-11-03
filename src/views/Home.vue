@@ -8,7 +8,7 @@
 </template>
 <script>
 // @ is an alias to /src
-import Memo from "@/components/Memo.vue";
+import Memo from "../views/Memo.vue";
 import { Auth } from "@aws-amplify/auth";
 import { message } from "ant-design-vue";
 
@@ -24,12 +24,7 @@ export default {
     Auth.currentAuthenticatedUser()
       .then((userData) => {
         console.log("home userdata:", userData);
-        // if (userData.preferredMFA === "NOMFA") {
-          // this.$router.push("/totpsetup/");
-        // }
-        // else {
-          this.user = userData;
-        // }
+        this.user = userData;
       })
       .catch(() => {
         message

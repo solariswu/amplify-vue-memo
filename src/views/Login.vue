@@ -104,8 +104,10 @@ export default {
               });
               break;
             case "MFA_SETUP":
-            default:
               this.$router.push("/totpsetup/");
+              break;
+            default:
+              this.$router.push("/memo/");
               break;
           }
         })
