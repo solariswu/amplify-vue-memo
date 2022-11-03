@@ -8,6 +8,7 @@ import ForgotPassword from "../views/Forgotpassword.vue";
 import TOTPSetup from "../views/Totpsetup.vue";
 import MFAInput from "../views/Mfainput.vue";
 import ConfirmSignUp from "../views/ConfirmSignUp.vue";
+import Memo from "../views/Memo.vue";
 
 const routes = [
   {
@@ -40,17 +41,22 @@ const routes = [
     path: "/mfainput",
     name: "MFAInput",
     component: MFAInput,
-    props: true, 
+    props: true,
   },
   {
     path: "/totpsetup",
     name: "TOTPSetup",
-    component: TOTPSetup 
+    component: TOTPSetup
   },
   {
     path: "/confirmsignup",
     name: "ConfirmSignUp",
     component: ConfirmSignUp
+  },
+  {
+    path: "/memo",
+    name: "Memo",
+    component: Memo
   },
   // {
   //   path: "/landing",
