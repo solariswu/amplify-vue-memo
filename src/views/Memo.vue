@@ -1,45 +1,31 @@
 <template>
-    <div>
-        <form id="signInForm" @submit.prevent="login">
-            <label class="label-customizable">固定提醒</label>
-            <div v-for="(memoItem, i) in fix_memo" :key="memoItem">
-                <input
-                    id="signInFormUsername"
-                    name="memo"
-                    type="text"
-                    v-model="fix_memo[i]"
-                    class="form-control inputField-customizable"
-                    placeholder=""
-                    autocapitalize="none"
-                    required
-                    :disabled="loading"
-                    autofocus="true"
-                />
-            </div>
-        </form>
-        <form id="signInForm" @submit.prevent="login">
-            <label class="label-customizable">备忘录</label>
-            <div v-for="(memoItem, i) in var_memo" :key="memoItem">
-                <input
-                    id="signInFormUsername"
-                    name="memo"
-                    type="text"
-                    v-model="var_memo[i]"
-                    class="form-control inputField-customizable"
-                    placeholder=""
-                    autocapitalize="none"
-                    required
-                    :disabled="loading"
-                    autofocus="true"
-                />
-            </div>
-        </form>
-    </div>
+    <form id="memoForm" @submit.prevent="modifyMemo">
+        <textarea
+            :rows="10"
+            v-model="fix_memo"
+            class="form-control inputField-customizable"
+        />
+        <textarea
+            :rows="10"
+            v-model="var_memo"
+            class="form-control inputField-customizable"
+        />
+        <a-button
+            variant="success"
+            type="primary"
+            click="modifyMemo"
+            htmlType="submit"
+            form="memoForm"
+            value="Submit"
+            block
+        >
+            提交
+        </a-button>
+    </form>
 </template>
 <script>
 import {Auth} from '@aws-amplify/auth';
-// import {message} from 'ant-design-vue';
-// import { MailTwoTone } from "@ant-design/icons";
+import {message} from 'ant-design-vue';
 
 export default {
     name: 'Memo',
@@ -48,15 +34,16 @@ export default {
     },
     data() {
         return {
-            item: '',
-            fix_memo: [''],
-            var_memo: ['']
+            fix_memo: '',
+            var_memo: '',
+            loading: false
         };
     },
     mounted: async function() {
-        const AWS = require('aws-sdk');
-        AWS.config.region = 'ap-southeast-2';
         // const s3 = new AWS.S3();
+        const AWS = require('aws-sdk');
+
+        AWS.config.region = 'ap-southeast-2';
         Auth.currentSession().then((data) => {
             AWS.config.credentials = new AWS.CognitoIdentityCredentials({
                 IdentityPoolId:
@@ -69,7 +56,6 @@ export default {
                 }
             });
 
-            //refreshes credentials using AWS.CognitoIdentity.getCredentialsForIdentity()
             AWS.config.credentials.refresh((error) => {
                 if (error) {
                     console.error(error);
@@ -82,24 +68,14 @@ export default {
                     let params = {Bucket: 'mypollytalk', Key: 'fixMemo.txt'};
                     s3.getObject(params)
                         .promise()
-                        .then(
-                            (res) =>
-                                (this.fix_memo = res.Body.toString().split(
-                                    '\n'
-                                )).filter(memo => memo.length > 0)
-                        )
+                        .then((res) => (this.fix_memo = res.Body.toString()))
                         .catch((err) =>
                             console.error('s3 file get error', err)
                         );
                     params = {Bucket: 'mypollytalk', Key: 'varMemo.txt'};
                     s3.getObject(params)
                         .promise()
-                        .then(
-                            (res) =>
-                                (this.var_memo = res.Body.toString().split(
-                                    '\n'
-                                )).filter(memo => memo.length > 0)
-                        )
+                        .then((res) => (this.var_memo = res.Body.toString()))
                         .catch((err) =>
                             console.error('s3 file get error', err)
                         );
@@ -107,6 +83,33 @@ export default {
             });
         });
     },
-    methods: {}
+    methods: {
+        async modifyMemo() {
+            const AWS = require('aws-sdk');
+            const s3 = new AWS.S3();
+            const promises = [];
+            const paramsFixMemo = {
+                Bucket: 'mypollytalk',
+                Key: 'fixMemo.txt',
+                Body: this.fix_memo
+            };
+            promises.push(s3.putObject(paramsFixMemo).promise());
+            const paramsVarMemo = {
+                Bucket: 'mypollytalk',
+                Key: 'varMemo.txt',
+                Body: this.var_memo
+            };
+            promises.push(s3.putObject(paramsVarMemo).promise());
+            this.loading = true;
+            Promise.all(promises)
+                .then((res) => {
+                    console.log('write memo res:', res);
+                    message.info('提交成功！').then(() => {
+                        this.loading = false;
+                    });
+                })
+                .catch((err) => message.warning('出错啦：'+err));
+        }
+    }
 };
 </script>
