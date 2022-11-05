@@ -104,11 +104,20 @@ export default {
             Promise.all(promises)
                 .then((res) => {
                     console.log('write memo res:', res);
-                    message.info('提交成功！').then(() => {
-                        this.loading = false;
+                    const lambda = new AWS.Lambda();
+                    var params = {
+                        FunctionName: 'aicontrolMemoMp3Gen'
+                    };
+                    lambda.invokeAsync(params, function(err, data) {
+                        if (err) console.log(err, err.stack);
+                        // an error occurred
+                        else
+                            message.info('提交成功！').then(() => {
+                                this.loading = false;
+                            }); // successful response
                     });
                 })
-                .catch((err) => message.warning('出错啦：'+err));
+                .catch((err) => message.warning('出错啦：' + err));
         }
     }
 };
