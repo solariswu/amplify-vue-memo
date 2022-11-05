@@ -108,7 +108,7 @@ export default {
                     var params = {
                         FunctionName: 'aicontrolMemoMp3Gen'
                     };
-                    lambda.invokeAsync(params, function(err, data) {
+                    lambda.invokeAsync(params, function(err ) {
                         if (err) console.log(err, err.stack);
                         // an error occurred
                         else
