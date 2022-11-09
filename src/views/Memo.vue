@@ -106,7 +106,8 @@ export default {
                     console.log('write memo res:', res);
                     const lambda = new AWS.Lambda();
                     var params = {
-                        FunctionName: 'aicontrolMemoMp3Gen'
+                        FunctionName: 'aicontrolMemoMp3Gen',
+                        InvokeArgs:  Buffer.from('{}'),
                     };
                     lambda.invokeAsync(params, function(err ) {
                         if (err) console.log(err, err.stack);
