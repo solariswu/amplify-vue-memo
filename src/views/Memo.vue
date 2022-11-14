@@ -1,33 +1,42 @@
 <template>
-    <form id="memoForm" @submit.prevent="modifyMemo">
-        <textarea
-            :rows="10"
-            v-model="fix_memo"
-            class="form-control inputField-customizable"
-        />
-        <textarea
-            :rows="10"
-            v-model="var_memo"
-            class="form-control inputField-customizable"
-        />
-        <a-button
-            variant="success"
-            type="primary"
-            click="modifyMemo"
-            htmlType="submit"
-            form="memoForm"
-            value="Submit"
-            block
-        >
-            提交
-        </a-button>
-    </form>
-    <br />
-    <p />
-    <a-button variant="success" type="primary" click="logout" block>
-        <!-- <b-icon icon="power" aria-hidden="true"></b-icon> -->
-        Logout
-    </a-button>
+      <div class="modal-content background-customizable modeal-content-mobile">
+    <div class="modal-body">
+        <h2>备忘录</h2><br />
+        <form id="memoForm" @submit.prevent="modifyMemo">
+            <textarea
+                :rows="10"
+                v-model="fix_memo"
+                class="form-control inputField-customizable"
+            /><br />
+            <textarea
+                :rows="10"
+                v-model="var_memo"
+                class="form-control inputField-customizable"
+            /><br />
+            <a-button
+                variant="success"
+                type="primary"
+                click="modifyMemo"
+                htmlType="submit"
+                form="memoForm"
+                value="Submit"
+                block
+            >
+                提交
+            </a-button>
+            <p />
+
+            <a-button
+                variant="success"
+                type="primary"
+                v-on:click="logout()"
+                block
+            >
+                <!-- <b-icon icon="power" aria-hidden="true"></b-icon> -->
+                Logout
+            </a-button>
+        </form>
+    </div></div>
 </template>
 <script>
 import {Auth} from '@aws-amplify/auth';
