@@ -22,6 +22,10 @@
             提交
         </a-button>
     </form>
+    <a-button variant="success" type="primary" v-on:click="logout()">
+        <!-- <b-icon icon="power" aria-hidden="true"></b-icon> -->
+        Logout
+    </a-button>
 </template>
 <script>
 import {Auth} from '@aws-amplify/auth';
@@ -107,9 +111,9 @@ export default {
                     const lambda = new AWS.Lambda();
                     var params = {
                         FunctionName: 'aicontrolMemoMp3Gen',
-                        InvokeArgs:  Buffer.from('{}'),
+                        InvokeArgs: Buffer.from('{}')
                     };
-                    lambda.invokeAsync(params, function(err ) {
+                    lambda.invokeAsync(params, function(err) {
                         if (err) console.log(err, err.stack);
                         // an error occurred
                         else
@@ -119,6 +123,17 @@ export default {
                     });
                 })
                 .catch((err) => message.warning('出错啦：' + err));
+        },
+        async logout() {
+            let navigate = this.$router;
+            Auth.signOut({global: true})
+                .then(() => {
+                    // console.log("logout:", data);
+                    navigate.push('/login');
+                })
+                .catch((err) => {
+                    message.error(err.message);
+                });
         }
     }
 };
