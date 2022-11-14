@@ -22,6 +22,8 @@
             提交
         </a-button>
     </form>
+    <br />
+    <p />
     <a-button variant="success" type="primary" click="logout" block>
         <!-- <b-icon icon="power" aria-hidden="true"></b-icon> -->
         Logout
